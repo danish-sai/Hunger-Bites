@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add the Products</title>
+    <!-- Description -->
+    <meta name="description" content="Food & Restaurant Website" />
+
+    <!-- Author -->
+    <meta name="author" content="Danish Saif" />
+
+    <!-- Keywords -->
+    <meta name="keywords" content="food, modern, restaurant" />
+
+    <!-- Application Name -->
+    <meta name="application-name" content="Hunger Bites" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="img/fav.ico" type="image/png" />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        form label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        form input,
+        form select,
+        form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #007bff9a;
+        }
+
+        #menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            width: 250px;
+            overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .card-info h2 {
+            font-size: 18px;
+            margin: 10px 0;
+            color: #007bff;
+        }
+
+        .card-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        #product-list {
+            margin: 30px 0;
+        }
+
+        .product-item {
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-item span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .delete-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background-color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+
+            form input,
+            form select,
+            form button {
+                font-size: 12px;
+            }
+
+            .card {
+                width: 90%;
+            }
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            /* Light overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #content {
+            display: block;
+            /* Content will show only after the loader disappears */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loader" class="loader">
+        <img src="img/loader.gif" alt="Loading..." />
+    </div>
+    <div id="content">
+        <header>
+            <h1>Restaurant Menu</h1>
+        </header>
+        <main>
+            <!-- Menu Form -->
+            <form id="menu-form">
+                <label for="dish-name">Dish Name:</label>
+                <input type="text" id="dish-name" required placeholder="Enter dish name">
+
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" required placeholder="Enter price">
+
+                <label for="category">Category:</label>
+                <select id="category" required>
+
+                    <option value="none" disabled selected>Choose Category</option>
+                    <option value="Burgers & Sandwiches">Burgers & Sandwiches</option>
+                    <option value="Sides & Snacks">Sides & Snacks</option>
+                    <option value="Pizzas & Wraps">Pizzas & Wraps</option>
+                    <option value="Drinks & Desserts">Drinks & Desserts</option>
+                </select>
+
+                <label for="image">Image:</label>
+                <input type="file" id="image" accept="image/*" required>
+
+                <button id="submit-btn">Add to Menu</button>
+            </form>
+
+            <!-- Product List -->
+            <div id="product-list"></div>
+
+            <!-- Menu Display -->
+            <div id="menu-container"></div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+
+            // Show loader for 3 seconds
+            setTimeout(() => {
+                loader.style.display = 'none'; // Hide loader
+                content.style.display = 'block'; // Show dashboard content
+            }, 2000); // 2 seconds delay
+        });
+        // Form submission handler
+        document.getElementById('menu-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const dishName = document.getElementById('dish-name').value;
+            const price = document.getElementById('price').value;
+            const category = document.getElementById('category').value;
+            const imageFile = document.getElementById('image').files[0];
+
+            // Convert the uploaded image to base64
+            const imageBase64 = await convertToBase64(imageFile);
+
+            const menuItem = {
+                dishName,
+                price,
+                category,
+                image: imageBase64, // Store as base64 string
+            };
+
+            const response = await fetch('/menu', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(menuItem),
+            });
+
+            if (response.ok) {
+                displayMenuItems();
+                displayProductList();
+                document.getElementById('menu-form').reset();
+            } else {
+                console.log('Error saving menu item.');
+            }
+        });
+
+        // Utility to convert image file to base64
+        async function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Fetch and display menu items
+        async function displayMenuItems() {
+            const response = await fetch('/menu');
+            const menuItems = await response.json();
+
+            const menuContainer = document.getElementById('menu-container');
+            menuContainer.innerHTML = '';
+
+            menuItems.forEach((menuItem) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const image = document.createElement('img');
+                image.src = menuItem.image; // Use the base64 string here
+                card.appendChild(image);
+
+                const cardInfo = document.createElement('div');
+                cardInfo.classList.add('card-info');
+
+                const dishName = document.createElement('h2');
+                dishName.textContent = menuItem.dishName;
+                cardInfo.appendChild(dishName);
+
+                const price = document.createElement('p');
+                price.textContent = `Price: $${menuItem.price}`;
+                cardInfo.appendChild(price);
+
+                const category = document.createElement('p');
+                category.textContent = `Category: ${menuItem.category}`;
+                cardInfo.appendChild(category);
+
+                card.appendChild(cardInfo);
+                menuContainer.appendChild(card);
+            });
+        }
+
+        // Fetch and display product list
+        async function displayProductList() {
+            const response = await fetch('/menu');
+            const menuItems = await response.json();
+
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+
+            menuItems.forEach((menuItem) => {
+                const productItem = document.createElement('div');
+                productItem.classList.add('product-item');
+
+                const productName = document.createElement('span');
+                productName.textContent = `${menuItem.dishName} - $${menuItem.price} (${menuItem.category})`;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.classList.add('delete-btn');
+                deleteBtn.onclick = async () => {
+                    const response = await fetch(`/menu/${menuItem.id}`, { method: 'DELETE' });
+                    if (response.ok) {
+                        displayMenuItems();
+                        displayProductList();
+                    } else {
+                        console.log('Error deleting menu item.');
+                    }
+                };
+
+                productItem.appendChild(productName);
+                productItem.appendChild(deleteBtn);
+                productList.appendChild(productItem);
+            });
+        }
+
+        // Initial load
+        displayMenuItems();
+        displayProductList();
+    </script>
+</body>
+
+</html>

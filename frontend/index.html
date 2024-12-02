@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Title -->
+  <title>Hunger Bites</title>
+
+  <!-- Description -->
+  <meta name="description" content="Food & Restaurant Website" />
+
+  <!-- Author -->
+  <meta name="author" content="Danish Saif" />
+
+  <!-- Keywords -->
+  <meta name="keywords" content="food, modern, restaurant" />
+
+  <!-- Application Name -->
+  <meta name="application-name" content="Hunger Bites" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="img/fav.ico" type="image/png" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style1.css">
+  <link rel="stylesheet" href="css/style2.css">
+  <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+
+
+  <!-- Google Fonts (Poppins) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/swiper-bundle.min.css">
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <img src="img/logo.png" id="logo" alt="">
+    <a href="#home" class="logo" title="Hunger Bites">
+      Hunger <span>Bites</span>
+    </a>
+
+    <ul class="nav-list">
+      <li><a href="#home" title="Home" class="active">Home</a></li>
+      <li><a href="#menu" title="About Us">Menu</a></li>
+      <li><a href="#order" title="Our Shop">Order Now</a></li>
+      <li>
+        <a href="login.html">Admin</a>
+      </li>
+
+    </ul>
+
+    <div class="nav-icons">
+      <a href="cart.html" title="Cart"><i class="bx bx-cart"></i></a>
+      <div class="bx bx-menu" id="menu-icon"></div>
+      
+    </div>
+  </header>
+
+
+  <!-- Home -->
+  <section class="home" id="home">
+    <div class="home-text">
+      <h1>
+        Are You Hungry? <br />
+        <span>Don't Wait</span><br />
+        Let start to order <br><span>food now !</span>
+      </h1>
+      <a href="#order" class="btn">Explore Menu <i class="bx bxs-right-arrow"></i></a>
+    </div>
+
+    <div class="home-img">
+      <img src="img/burger.png" alt="burger" />
+    </div>
+  </section>
+
+
+  <!--==================== POPULAR ====================-->
+  <section class="popular section" id="menu">
+    <h2 class="section_title">
+      <span>Hot Deals</span> <br> Let's Order Now !
+    </h2>
+
+    <div class="popular_container container swiper">
+      <div class="swiper-wrapper" id="menu-cards-container">
+        <!-- Cards will be dynamically added here by JavaScript -->
+      </div>
+
+      <!-- Pagination for the Swiper -->
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Include the Swiper JS library -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  </section>
+  <!-- Container -->
+  <section class="container">
+    <div class="container-box">
+      <img src="img/c1.png" alt="working hours" />
+      <h3>11:00 am - 8:00 pm</h3>
+      <a href="javascript:;">Working Hours</a>
+    </div>
+
+    <div class="container-box">
+      <img src="img/c2.png" alt="working hours" />
+      <h3>Hunger Bites</h3>
+      <a href="javascript:;">Get Direction</a>
+    </div>
+
+    <div class="container-box">
+      <img src="img/c3.png" alt="call us now" />
+      <h3>0309-7007571</h3>
+      <a href="javascript:;">Call Us Now</a>
+    </div>
+  </section>
+
+  <!--==================== FEATURED ====================-->
+  <section class="featured" id="order">
+    <h2 class="section_title">
+      <p><span>Our Delicious Foods</span></p>
+    </h2>
+    <p class="section_title">
+      Food is any substance consumed to provide <br />
+      nutritional support for an organism.
+    </p>
+    <div class="featured_container">
+      <div id="featured-content" class="featured_content">
+        <!-- Product cards will be dynamically injected here -->
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Scroll to Top -->
+  <a href="javascript:;" onclick="topFunction()" class="scroll" id="scroll-btn" title="Go to Top">
+    <i class="bx bx-up-arrow-alt"></i>
+  </a>
+  <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const featuredContent = document.getElementById('featured-content');
+
+      // Fetch products from the server
+      fetch('/menu')
+        .then((response) => response.json())
+        .then((menuItems) => {
+          // Render each product as a card
+          menuItems.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'featured_card';
+            card.innerHTML = `
+          <div class="shape_smaller"></div>
+          <h3 class="featured_title">${item.dishName}</h3>
+          <img src="${item.image}" alt="${item.dishName}" class="featured_img">
+          <p class="featured_subtitle">${item.category}</p>
+          <span class="featured_price">Price: $${item.price}</span>
+          <button class="featured_button button" data-id="${item.id}" data-name="${item.dishName}" data-price="${item.price}">
+            <i class="ri-shopping-bag-2-line"></i>
+          </button>
+        `;
+
+            // Append card to the container
+            featuredContent.appendChild(card);
+          });
+
+          // Add click event listener to dynamically created buttons
+          document.querySelectorAll('.button').forEach((button) => {
+            button.addEventListener('click', (e) => {
+              const button = e.target.closest('.button');
+              const productDetails = {
+                id: parseInt(button.dataset.id),
+                name: button.dataset.name,
+                price: parseFloat(button.dataset.price),
+                quantity: 1, // Default quantity
+              };
+              addToCart(productDetails);
+            });
+          });
+        })
+        .catch((error) => {
+          console.error('Error loading products:', error);
+          featuredContent.innerHTML = `<p>Failed to load products. Please try again later.</p>`;
+        });
+
+      // Function to add product to cart
+      function addToCart(productDetails) {
+        try {
+          // Validate product details
+          if (!productDetails || !productDetails.id || !productDetails.name || !productDetails.price) {
+            console.error("Invalid product details provided.");
+            return;
+          }
+
+          // Get the existing cart from localStorage
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+          // Check if the product already exists in the cart
+          const existingProduct = cart.find((product) => product.id === productDetails.id);
+          if (existingProduct) {
+            existingProduct.quantity += 1; // Increment quantity
+          } else {
+            cart.push({ ...productDetails, quantity: 1 }); // Add new product with default quantity
+          }
+
+          // Save the updated cart back to localStorage
+          localStorage.setItem('cart', JSON.stringify(cart));
+        } catch (error) {
+          console.error("Error adding product to cart:", error);
+        }
+      }
+    });
+
+    // Initialize Swiper
+    const swiper = new Swiper('.swiper', {
+  slidesPerView: 1,
+  spaceBetween: 10,
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true
+  },
+  breakpoints: {
+    640: {
+      slidesPerView: 2,
+      spaceBetween: 20
+    },
+    765: {
+      slidesPerView: 3,
+      spaceBetween: 30
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 40
+    }
+  }
+});
+
+
+    // Fetch and display the hot deal items
+    async function fetchAndDisplayHotDeals() {
+      try {
+        const response = await fetch('/hotdeal');
+        const hotDeals = await response.json();
+
+        displayMenuItems(hotDeals);
+      } catch (error) {
+        console.error('Error fetching hot deals:', error);
+      }
+    }
+
+    function displayMenuItems(menuItems) {
+      const menuContainer = document.getElementById('menu-cards-container');
+      menuContainer.innerHTML = ''; // Clear previous content
+
+      menuItems.forEach((menuItem) => {
+        const card = document.createElement('article');
+        card.classList.add('popular_card', 'swiper-slide');
+
+        // const shape = document.createElement('div');
+        // shape.classList.add('shape', 'shape_smaller');
+        // card.appendChild(shape);
+
+        const dishName = document.createElement('h1');
+        dishName.classList.add('popular_title');
+        dishName.textContent = menuItem.dishName;
+        card.appendChild(dishName);
+
+        const image = document.createElement('img');
+        image.src = menuItem.image;
+        image.alt = menuItem.dishName;
+        image.classList.add('popular_img');
+        card.appendChild(image);
+
+        const priceSection = document.createElement('div');
+        const subtitle = document.createElement('h3');
+        subtitle.classList.add('popular_subtitle');
+        subtitle.style.color = '#ff9f0d';
+        subtitle.textContent = 'Price:';
+        priceSection.appendChild(subtitle);
+
+        const price = document.createElement('h3');
+        price.classList.add('popular_price');
+        price.textContent = `$${menuItem.price}`;
+        priceSection.appendChild(price);
+
+        card.appendChild(priceSection);
+
+        const button = document.createElement('button');
+        button.classList.add('button', 'popular_button');
+        button.innerHTML = '<i class="ri-shopping-bag-2-line"></i>';
+
+        // Add data attributes similar to the featured button
+        button.setAttribute('data-id', menuItem.id);
+        button.setAttribute('data-name', menuItem.dishName);
+        button.setAttribute('data-price', menuItem.price);
+
+        // Append button to card
+        card.appendChild(button);
+
+
+        menuContainer.appendChild(card);
+      });
+    }
+
+    // Call the function to fetch and display the hot deals on page load
+    fetchAndDisplayHotDeals();
+    // This JavaScript listens for scroll events to toggle the sticky class
+    window.addEventListener('scroll', function () {
+      const header = document.querySelector('header');
+      const stickyClass = 'sticky';
+
+      if (window.scrollY > 0) {
+        header.classList.add(stickyClass); // Add sticky class when scrolling
+      } else {
+        header.classList.remove(stickyClass); // Remove sticky class when at the top
+      }
+    });
+
+
+
+  </script>
+  <script src="js/app.js"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="js/mixitup.min.js"></script>
+</body>
+</html>

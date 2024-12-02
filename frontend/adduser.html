@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add the Users</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <!-- Description -->
+  <meta name="description" content="Food & Restaurant Website" />
+
+  <!-- Author -->
+  <meta name="author" content="Danish Saif" />
+
+  <!-- Keywords -->
+  <meta name="keywords" content="food, modern, restaurant" />
+
+  <!-- Application Name -->
+  <meta name="application-name" content="Hunger Bites" />
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="img/fav.ico" type="image/png" />
+  <style>
+    /* General Reset */
+    *,
+    *:before,
+    *:after {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #080710;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Background Styling */
+    .background {
+      width: 100%;
+      height: 100vh;
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .background .shape {
+      height: 200px;
+      width: 200px;
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .shape:first-child {
+      background: linear-gradient(#1845ad, #23a2f6);
+      left: -80px;
+      top: -80px;
+    }
+
+    .shape:last-child {
+      background: linear-gradient(to right, #ff512f, #f09819);
+      right: -30px;
+      bottom: -80px;
+    }
+
+    /* Login Box */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    .login-box {
+      max-width: 400px;
+      width: 90%;
+      background-color: rgba(255, 255, 255, 0.13);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+      padding: 30px 20px;
+    }
+
+    .login-box h3 {
+      font-size: 24px;
+      font-weight: 500;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .form-group {
+      margin-top: 20px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #ffffff;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.07);
+      border-radius: 3px;
+      padding: 0 10px;
+      font-size: 14px;
+      color: #ffffff;
+      outline: none;
+      border: none;
+    }
+
+    input::placeholder {
+      color: #e5e5e5;
+    }
+
+    button.login-btn {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #ffffff;
+      color: #080710;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      /* Light overlay */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #content {
+      display: block;
+      /* Content will show only after the loader disappears */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loader" class="loader">
+    <img src="img/loader.gif" alt="Loading..." />
+  </div>
+  <div id="content">
+    <div class="background">
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
+    <div class="login-container">
+      <form class="login-box" id="loginForm">
+        <h3>Add New User</h3>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Email or Phone" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <button type="submit" class="login-btn">Add user</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loader = document.getElementById('loader');
+      const content = document.getElementById('content');
+
+      // Show loader for 3 seconds
+      setTimeout(() => {
+        loader.style.display = 'none'; // Hide loader
+        content.style.display = 'block'; // Show dashboard content
+      }, 2000); // 2 seconds delay
+    });
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/add-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const result = await response.json();
+        console.log("Response from server:", result); // Log the response for debugging
+
+        if (response.ok) {
+          document.getElementById('loginForm').reset();
+        } else {
+          console.log(result.message);
+        }
+      } catch (error) {
+        console.error('Error adding user:', error);
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>
