@@ -40,7 +40,9 @@ A full-stack restaurant web application inspired by HungerBites. This platform a
 
 --
 git clone https://github.com/danish-sai/Hunger-Bites.git
+
 cd Hunger-Bites
+
 Install server dependencies
 
 
