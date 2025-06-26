@@ -46,18 +46,34 @@ cd Hunger-Bites
 Install server dependencies
 
 
+
 cd server
+
 npm install
+
 Create a .env file
 
 
+
 PORT=5000
+
 MONGO_URI=your_mongodb_connection_string
+
 Run the backend server
 
 
+
 node server.js
+
 Open the index.html file in your browser or serve it via local server.
+
+
+
+
+
+
+
+
 
 
 
@@ -79,6 +95,7 @@ This project is licensed under the MIT License.
 Danish Saif
 
 Contact: chdanishsaif10@gmail.com
+
 GitHub: @danish-sai
 
 
